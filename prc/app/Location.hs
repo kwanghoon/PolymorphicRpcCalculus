@@ -2,6 +2,7 @@ module Location where
 
 
 data Location =
-    Location String
+    Location String 
   | LocVar String
-    deriving (Show, Eq)
+  
+  deriving (Show, Eq)

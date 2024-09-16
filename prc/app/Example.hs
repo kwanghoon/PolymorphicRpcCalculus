@@ -10,8 +10,8 @@ client1 = Location "client1"
 client2 = Location "client2"
 client3 = Location "client3"
 
-server1 = Location "server"
-server2 = Location "server"
+server1 = Location "server1"
+server2 = Location "server2"
 
 
 ex1, ex2, ex3 :: Expr

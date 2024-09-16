@@ -6,10 +6,11 @@ import Location
 
 
 data ExpVal = 
-    NumVal {expvalInt :: Int}
-  | BoolVal {expvalBool :: Bool}
-  | FunVal {expvalProc :: Proc}
-    deriving (Show, Eq)
+    NumVal {expValInt :: Int}
+  | BoolVal {expValBool :: Bool}
+  | FunVal {expValProc :: Proc}
+
+  deriving (Show, Eq)
 
 -- type TypeVal = Type
 -- type LocationVal = Location
@@ -20,14 +21,16 @@ data Proc =
     ValProc Location String Expr Env
   | TypeProc Location String Expr Env
   | LocProc Location String Expr Env
-    deriving (Show, Eq)
+  
+  deriving (Show, Eq)
 
 data Env = 
     EmptyEnv
   | ExtendEnv String ExpVal Env
   | ExtendTypeEnv String Type Env
   | ExtendLocEnv String Location Env
-    deriving (Show, Eq)
+  
+  deriving (Show, Eq)
 
 
 lookupEnv :: String -> Env -> ExpVal
