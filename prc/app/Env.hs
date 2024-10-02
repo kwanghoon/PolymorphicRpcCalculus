@@ -19,8 +19,8 @@ data ExpVal =
 -- Closure
 data Proc = 
     ValProc Location String Expr Env
-  | TypeProc Location String Expr Env
-  | LocProc Location String Expr Env
+  | TypeProc String Expr Env
+  | LocProc String Expr Env
   
   deriving (Show, Eq)
 

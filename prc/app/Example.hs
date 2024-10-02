@@ -20,6 +20,7 @@ ex2 = Abs client2 "x" (Var "x")
 ex3 = Abs client3 "x" (Var "x")
 
 ex1_1 =  App ex1 (ConstInt 1) -- ex1_1 :: int
+ex1_2 = App ex3 (App ex1 (ConstInt 1))
 
 
 

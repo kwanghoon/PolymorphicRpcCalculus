@@ -21,13 +21,13 @@ valueOf (App e1 e2) env atLoc =
 
 -- Todo : valueOf for TypeAbs, TypeApp, LocAbs, LocApp
 
-valueOf (TypeAbs x e) env atLoc = FunVal (TypeProc atLoc x e env)
+valueOf (TypeAbs x e) env atLoc = FunVal (TypeProc x e env)
 valueOf (TypeApp e t) env atLoc = 
     let v = valueOf e env atLoc
         p = expValProc v
     in applyTypeProcedure p t atLoc
 
-valueOf (LocAbs x e) env atLoc = FunVal (LocProc atLoc x e env)
+valueOf (LocAbs x e) env atLoc = FunVal (LocProc x e env)
 valueOf (LocApp e l) env atLoc = 
     let v = valueOf e env atLoc
         p = expValProc v
@@ -43,12 +43,12 @@ applyProcedure _ _ _ = error "Expected procedure"
 -- Todo : applyTypeProcedure, applyLoc Procedure
 
 applyTypeProcedure :: Proc -> Type -> Location -> ExpVal
-applyTypeProcedure (TypeProc loc arg body env) argval atLoc =
-    valueOf body (ExtendTypeEnv arg argval env) loc
+applyTypeProcedure (TypeProc arg body env) argty atLoc =
+    valueOf body (ExtendTypeEnv arg argty env) atLoc
 applyTypeProcedure _ _ _ =  error "Expected type procedure"
 
 
 applyLocProcedure :: Proc -> Location -> Location -> ExpVal
-applyLocProcedure (LocProc loc arg body env) argval atLoc =
-    valueOf body (ExtendLocEnv arg argval env) loc
+applyLocProcedure (LocProc arg body env) argloc atLoc =
+    valueOf body (ExtendLocEnv arg argloc env) atLoc
 applyLocProcedure _ _ _ = error "Expected location procedure"
