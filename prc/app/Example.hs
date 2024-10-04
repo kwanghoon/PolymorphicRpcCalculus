@@ -32,7 +32,7 @@ ty2 = FunType intty client2 intty -- ex2 :: ty2
 ty3 = FunType intty client3 intty -- ex3 :: ty3
 
 ex4 :: Expr
-ex4 = LocAbs "l" (Abs (LocVar "l") "x" (Var "x")) -- forall l:Loc, int -l -> int l은 polymorphic한 무언가.. Generic함수 생각해보자
+ex4 = LocAbs "l" (Abs (LocVar "l") "x" (Var "x")) -- forall l:Loc, int -l -> int --- l은 polymorphic한 무언가.. Generic함수 생각해보자
 
 ex5 = LocApp ex4 client1  -- ex5 :: ty1
 ex6 = LocApp ex4 client2  -- ex6 :: ty2

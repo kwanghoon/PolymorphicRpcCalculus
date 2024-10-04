@@ -19,8 +19,6 @@ valueOf (App e1 e2) env atLoc =
         p = expValProc v1
     in applyProcedure p v2 atLoc
 
--- Todo : valueOf for TypeAbs, TypeApp, LocAbs, LocApp
-
 valueOf (TypeAbs x e) env atLoc = FunVal (TypeProc atLoc x e env)
 valueOf (TypeApp e t) env atLoc = 
     let v = valueOf e env atLoc
@@ -40,13 +38,10 @@ applyProcedure (ValProc loc arg body env) argval atLoc =
     valueOf body (ExtendEnv arg argval env) loc
 applyProcedure _ _ _ = error "Expected procedure"
 
--- Todo : applyTypeProcedure, applyLoc Procedure
-
 applyTypeProcedure :: Proc -> Type -> Location -> ExpVal
 applyTypeProcedure (TypeProc loc arg body env) argval atLoc =
     valueOf body (ExtendTypeEnv arg argval env) loc
 applyTypeProcedure _ _ _ =  error "Expected type procedure"
-
 
 applyLocProcedure :: Proc -> Location -> Location -> ExpVal
 applyLocProcedure (LocProc loc arg body env) argval atLoc =
