@@ -5,6 +5,15 @@ import Env
 import Location
 import Type
 
+-- Continuation
+
+data Cont = 
+    EndCont
+
+applyCont :: Cont -> ExpVal -> ExpVal
+applyCont EndCont v = v
+
+
 valueOf :: Expr -> Env -> Location -> ExpVal
 valueOf (Var x) env atloc = lookupEnv x env
 
@@ -17,33 +26,33 @@ valueOf (App e1 e2) env atLoc =
         v2 = valueOf e2 env atLoc
 
         p = expValProc v1
-    in applyProcedure p v2 atLoc
+    in applyProcedureK p v2 atLoc
 
-valueOf (TypeAbs x e) env atLoc = FunVal (TypeProc atLoc x e env)
+valueOf (TypeAbs x e) env atLoc = FunVal (TypeProc x e env)
 valueOf (TypeApp e t) env atLoc = 
     let v = valueOf e env atLoc
         p = expValProc v
-    in applyTypeProcedure p t atLoc
+    in applyTypeProcedureK p t atLoc
 
-valueOf (LocAbs x e) env atLoc = FunVal (LocProc atLoc x e env)
+valueOf (LocAbs x e) env atLoc = FunVal (LocProc x e env)
 valueOf (LocApp e l) env atLoc = 
     let v = valueOf e env atLoc
         p = expValProc v
-    in applyLocProcedure p l atLoc
+    in applyLocProcedureK p l atLoc
 
 
 
-applyProcedure :: Proc -> ExpVal -> Location -> ExpVal
-applyProcedure (ValProc loc arg body env) argval atLoc =
+applyProcedureK :: Proc -> ExpVal -> Location -> ExpVal
+applyProcedureK (ValProc loc arg body env) argval atLoc =
     valueOf body (ExtendEnv arg argval env) loc
-applyProcedure _ _ _ = error "Expected procedure"
+applyProcedureK _ _ _ = error "Expected procedure"
 
-applyTypeProcedure :: Proc -> Type -> Location -> ExpVal
-applyTypeProcedure (TypeProc loc arg body env) argval atLoc =
-    valueOf body (ExtendTypeEnv arg argval env) loc
-applyTypeProcedure _ _ _ =  error "Expected type procedure"
+applyTypeProcedureK :: Proc -> Type -> Location -> ExpVal
+applyTypeProcedureK (TypeProc arg body env) argty atLoc =
+    valueOf body (ExtendTypeEnv arg argty env) atLoc
+applyTypeProcedureK _ _ _ =  error "Expected type procedure"
 
-applyLocProcedure :: Proc -> Location -> Location -> ExpVal
-applyLocProcedure (LocProc loc arg body env) argval atLoc =
-    valueOf body (ExtendLocEnv arg argval env) loc
-applyLocProcedure _ _ _ = error "Expected location procedure"
+applyLocProcedureK :: Proc -> Location -> Location -> ExpVal
+applyLocProcedureK (LocProc arg body env) argloc atLoc =
+    valueOf body (ExtendLocEnv arg argloc env) atLoc
+applyLocProcedureK _ _ _ = error "Expected location procedure"

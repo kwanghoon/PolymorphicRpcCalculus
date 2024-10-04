@@ -23,6 +23,6 @@ data Expr =
 isValue :: Expr -> Bool
 isValue (Var _) = True
 isValue (Abs _ _ _) = True
-isValue (TypeAbs  _ _) = True
-isValue (LocAbs _  _) = True
+isValue (TypeAbs _ _) = True
+isValue (LocAbs _ _) = True
 isValue _ = False

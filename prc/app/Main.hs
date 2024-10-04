@@ -5,7 +5,7 @@ import Interp
 import Env
 
 main :: IO ()
-main = do let v = valueOf ex1 EmptyEnv client2
-          putStrLn (show ex1)
+main = do let v = valueOf ex1_2 EmptyEnv client2
+          print ex1_2
           putStrLn ""
-          putStrLn (show v)
+          print v
