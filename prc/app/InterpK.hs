@@ -4,7 +4,6 @@ import Expr
 import Env
 import Location
 import Type
--- import Language.Haskell.TH (Loc)
 
 -- Continuation
 
@@ -13,6 +12,10 @@ data Cont =
   | RandCont ExpVal Cont --  App Val [  ]
   | TypeRatorCont Type Cont -- TypeApp [  ] Type
   | LocRatorCont Location Cont -- LocApp [  ] Location
+  | SetCont Identifier Cont  -- Set Identifier [ ]
+  | SpawnCont Cont -- Spawn [ ]
+  | WaitCont Cont -- Wait [ ]
+  | SignalCont Cont -- Signal [ ]
   | EndCont
 
 --
@@ -33,6 +36,8 @@ applyCont (LocRatorCont l cont) clo atLoc =
         applyLocProcedureK p l atLoc cont        
 
 applyCont EndCont v atloc = v
+
+applyCont _ _ _ = undefined
 
 
 --
@@ -60,6 +65,8 @@ valueOfK (LocAbs x e) env atLoc cont =
 
 valueOfK (LocApp e l) env atLoc cont = 
     valueOfK e env atLoc (LocRatorCont l cont)
+
+valueOfK _ _ _ _ = undefined
 
 valueOfProgramK :: Expr -> Location -> ExpVal
 valueOfProgramK e atLoc = valueOfK e EmptyEnv atLoc EndCont

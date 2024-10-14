@@ -3,6 +3,7 @@ module Expr where
 import Location
 import Type
 
+type Identifier = String
 
 data Expr = 
     Var String                      -- variable
@@ -17,6 +18,14 @@ data Expr =
 
   | LocApp Expr Location            -- location application M [Loc]
   | LocAbs String Expr              -- location abstraction
+
+  | Set Identifier Expr             -- set x = expression 
+  
+  | Spawn Expr                      -- spawn (expression)
+  | Yield                           -- yield ()
+  | Mutex                           -- mutex ()
+  | Wait Expr                       -- wait (expression)
+  | Signal Expr                     -- signal (expression)
 
   deriving (Show, Eq)
 

@@ -1,19 +1,37 @@
 module Env where
 
+import Location
 import Expr
 import Type
-import Location
-
+import Queue
 
 data ExpVal = 
     NumVal {expValInt :: Int}
   | BoolVal {expValBool :: Bool}
   | FunVal {expValProc :: Proc}
+  | ListVal {expValList :: [ExpVal]}
+  | MutexVal {expValMutex :: Mutex}
+  | QueueVal {expValQueue :: Queue Thread}
 
-  deriving (Show, Eq)
+instance Show ExpVal where
+  show (NumVal n) = show n
+  show (BoolVal b) = show b
+  show (FunVal p) = show p
+  show (ListVal l) = show l
+  show (MutexVal m) = show m
+  show (QueueVal _) = "queue"
 
--- type TypeVal = Type
--- type LocationVal = Location
+instance Eq ExpVal where
+  NumVal n1 == NumVal n2     = n1 == n2
+  BoolVal b1 == BoolVal b2   = b1 == b2
+  FunVal p1 == FunVal p2     = p1 == p2
+  ListVal l1 == ListVal l2   = l1 == l2
+  MutexVal m1 == MutexVal m2 = m1 == m2
+  QueueVal _ == QueueVal _   = True
+  _ == _                     = False
+
+-- Reference Addresses
+type Address = Integer
 
 
 -- Closure
@@ -55,3 +73,41 @@ lookupLocEnv x (ExtendEnv _ _ env) = lookupLocEnv x env
 lookupLocEnv x (ExtendTypeEnv _ _ env) = lookupLocEnv x env
 lookupLocEnv x (ExtendLocEnv y v env) = 
     if x == y then v else lookupLocEnv x env
+
+-- Mutex values : boolean and thread queue
+data Mutex = Mutex Address Address -- binary semaphores: Loc to Bool, Loc to (Queue Thread)
+             deriving (Show, Eq)
+
+-- Scheduler states
+data SchedState =
+  SchedState {
+   theReadyQueue :: Queue Thread,
+   theFinalAnswer :: Maybe ExpVal,
+   theMaxTimeSlice :: Integer,
+   theTimeRemaining :: Integer
+  }
+
+-- Threads
+type Thread = Store -> SchedState -> (ExpVal, Store)
+
+--
+type Store = (Address, [(Address,ExpVal)]) -- Next new reference address
+
+newref :: Store -> ExpVal -> (Address,Store)
+newref store@(next,s) v = (next,(next+1,(next,v):s))
+
+deref :: Store -> Address -> ExpVal
+deref store@(next,s) loc =
+  case [v | (loc',v) <- s, loc==loc'] of
+    (v:_) -> v
+    _     -> error ("Reference address not found: " ++ show loc)
+
+setref :: Store -> Address -> ExpVal -> Store
+setref store@(next,s) loc v = (next,update s)
+  where update [] = error ("Invalid reference address: " ++ show loc)
+        update ((loc',w):s')
+          | loc==loc' = (loc,v):s'
+          | otherwise = (loc',w):update s'
+
+initStore :: Store
+initStore = (1,[])
