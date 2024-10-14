@@ -1,4 +1,4 @@
-module Env where
+module EnvStore where
 
 import Location
 import Expr

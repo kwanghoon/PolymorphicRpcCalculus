@@ -3,7 +3,7 @@ module Main (main) where
 import Example
 import Interp(valueOf)
 import InterpK(valueOfProgramK)
-import Env
+import EnvStore
 
 main :: IO ()
 main = do let v = valueOfProgramK ex1_2 client2

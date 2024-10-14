@@ -1,7 +1,7 @@
 module InterpK where
 
 import Expr
-import Env
+import EnvStore
 import Location
 import Type
 

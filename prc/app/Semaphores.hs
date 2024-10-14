@@ -1,6 +1,6 @@
 module Semaphores where
 
-import Env 
+import EnvStore 
 import Queue
 import Scheduler
 

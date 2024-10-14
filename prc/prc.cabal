@@ -1,6 +1,6 @@
 cabal-version: 2.2
 
--- This file has been generated from package.yaml by hpack version 0.37.0.
+-- This file has been generated from package.yaml by hpack version 0.36.0.
 --
 -- see: https://github.com/sol/hpack
 
@@ -40,11 +40,15 @@ library
 executable prc-exe
   main-is: Main.hs
   other-modules:
-      Env
+      EnvStore
       Example
       Expr
       Interp
+      InterpK
       Location
+      Queue
+      Scheduler
+      Semaphores
       Type
       Paths_prc
   autogen-modules:

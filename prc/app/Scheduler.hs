@@ -1,6 +1,6 @@
 module Scheduler where
 
-import Env
+import EnvStore
 import Queue
 import Data.Maybe
 
